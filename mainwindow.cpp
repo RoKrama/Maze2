@@ -18,8 +18,8 @@ void MainWindow::setmazegraph(Maze &mymaze)
 {
     int y = mymaze.getx();
     int x = mymaze.gety();
-    int resolution =14;
-    int wallsize = 2;
+    int resolution =2;
+    int wallsize = 1;
     int resminwall = resolution - wallsize;
 
     QImage image((x*resolution+wallsize), (y*resolution+wallsize), QImage::Format_Mono);

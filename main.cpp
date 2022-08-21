@@ -6,8 +6,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-    int hight = 20;
-    int width = 20;
+    int hight = 700;
+    int width = 1270;
     w.showMaximized();
 
     Maze labirint(hight, width);
