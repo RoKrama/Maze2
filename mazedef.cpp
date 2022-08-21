@@ -100,6 +100,97 @@ void Maze::generate(int xpos, int ypos)
 	while (Path.prev->prev != nullptr);
 
 }
+void Maze::findPath(int startx, int starty)
+{
+    int tried;
+    searchPath = Memo(startx, starty);
+    cell[startx][starty].searchVisit = true;
+
+    random_device rng;
+    mt19937 rngnr(rng());
+
+    int cases[4] = { 0,1,2,3 };
+
+    do {
+        tried = 0;
+        while (tried != 4)
+        {
+            if (startx == 0 && starty == 0)
+                return;
+
+            shuffle(&cases[0], &cases[4], rngnr);
+            tried = 0;
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (cases[i] == 0)
+                {
+                    if (starty < (y - 1) && cell[startx][starty + 1].searchVisit == false)
+                    {
+                        if(cell[startx][starty].wallleft == false)
+                        {
+                            starty = starty + 1;
+                            cell[startx][starty].searchVisit = true;
+                            searchPath.insert(startx, starty);
+                            break;
+                        }
+                    }
+                    tried++;
+                    continue;
+                }
+                if (cases[i] == 1)
+                {
+                    if (startx > 0 && cell[startx - 1][starty].searchVisit == false)
+                    {
+                        if(cell[startx - 1][starty].walldown == false)
+                        {
+                        startx = startx - 1;
+                        cell[startx][starty].searchVisit = true;
+                        searchPath.insert(startx, starty);
+                        break;
+                        }
+                    }
+                    tried++;
+                    continue;
+                }
+                if (cases[i] == 2)
+                {
+                    if (starty > 0 && cell[startx][starty - 1].searchVisit == false)
+                    {
+                        if(cell[startx][starty - 1].wallleft == false)
+                        {
+                        starty = starty - 1;
+                        cell[startx][starty].searchVisit = true;
+                        searchPath.insert(startx, starty);
+                        break;
+                        }
+                    }
+                    tried++;
+                    continue;
+                }
+                if (cases[i] == 3)
+                {
+                    if (startx < (x - 1) && cell[startx + 1][starty].searchVisit == false)
+                    {
+                        if (cell[startx][starty].walldown == false)
+                        {
+                        startx = startx + 1;
+                        cell[startx][starty].searchVisit = true;
+                        searchPath.insert(startx, starty);
+                        break;
+                        }
+                    }
+                    tried++;
+                    continue;
+                }
+            }
+        }
+        searchPath.move();
+        startx = searchPath.prev->position[0];
+        starty = searchPath.prev->position[1];
+    }
+    while (searchPath.prev->prev != nullptr);
+}
 void Maze::printMaze()
 {
 	cout << ' ';
@@ -110,7 +201,8 @@ void Maze::printMaze()
     for (int i = 0; i < x; i++)
 	{
         for (int j = 0; j < y; j++)
-            cell[i][j].printcell();
+            //cell[i][j].printcell();
+            cout<<"i:"<<i<<" j:"<<j;
 		cout << endl << '|';
 	}
 	cout << "\b ";
@@ -124,7 +216,7 @@ Maze::~Maze()
 
 Cell::Cell() :
 	wallleft(true), walldown(true),
-	visit(false) {}
+    visit(false), searchVisit(false) {}
 void Cell::setfrom(direction frm)
 {
 	if (frm == D) walldown = false;

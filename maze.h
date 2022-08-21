@@ -31,6 +31,7 @@ class Cell
 	friend class Maze;
 
 	bool visit;
+    bool searchVisit;
 
 	void setto(direction);
 	void setfrom(direction);
@@ -48,6 +49,7 @@ class Maze
 	typedef Cell* cellPtr;
 	cellPtr* cell;
 	Memo Path;
+    Memo searchPath;
     void generate(int xp, int yp);
 
 
@@ -59,6 +61,7 @@ public:
     const cellPtr* getcells() const {return(cell);}
     const int getx() const {return (x);};
     const int gety() const {return (y);};
+    void findPath(int startx, int starty);
 
 };
 #endif // MAZE_H

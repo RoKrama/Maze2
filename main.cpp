@@ -6,14 +6,14 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-    int hight = 700;
-    int width = 1270;
+    int hight = 50;
+    int width = 50;
     w.showMaximized();
 
     Maze labirint(hight, width);
     w.setmazegraph(labirint);
 
 
-//    labirint.printMaze();
+   // labirint.printMaze();
     return a.exec();
 }
