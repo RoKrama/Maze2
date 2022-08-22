@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <algorithm>
 
+
 using namespace std;
 
 class Memo
@@ -16,12 +17,15 @@ class Memo
 	Memo(int, int);
 
 	int position[2];
-	Memo* prev;
+    Memo* prev;
 	Memo* create;
 
-	Memo* move();
+    Memo* move();
 	void insert(int xcr, int ycr);
 
+public:
+    Memo* iteratePrev(int times);
+    int* getPosition() {return (&position[0]);};
 };
 
 enum direction { null, U, D, L, R };
@@ -32,14 +36,16 @@ class Cell
 
 	bool visit;
     bool searchVisit;
+    bool wallleft;
+    bool walldown;
 
 	void setto(direction);
 	void setfrom(direction);
     void printcell();
 
 public:
-    bool wallleft;
-    bool walldown;
+    const bool getWallleft() const {return wallleft;};
+    const bool getWalldown() const {return walldown;};
 };
 
 class Maze
@@ -48,20 +54,25 @@ class Maze
 
 	typedef Cell* cellPtr;
 	cellPtr* cell;
+
 	Memo Path;
     Memo searchPath;
-    void generate(int xp, int yp);
+    Memo* searchPositionLog;
 
+    void generate(int xp, int yp);
+    void findPath(int startx, int starty);
+    bool findPathcalled;
 
 public:
+
 	Maze(int xsize, int ysize);
 	~Maze();
 
-	void printMaze();
+    void printMaze() const;
     const cellPtr* getcells() const {return(cell);}
     const int getx() const {return (x);};
     const int gety() const {return (y);};
-    void findPath(int startx, int starty);
 
+    Memo* getPositionLog(int fromx, int formy);
 };
 #endif // MAZE_H

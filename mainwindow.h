@@ -19,11 +19,19 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void setmazegraph(Maze &mymaze);
-    void setpixcell(Maze &mymaze, int &x, int &y, QImage &image, int &rsl, int &rslmwll, int &wllsz);
+
     QLabel *mazegraph = new QLabel(this);
+    QImage image;
+
+    void setmazegraph(Maze &mymaze);
+    void setpixcell(Maze &mymaze, int &x, int &y);
+    void qprintcell(Maze &mymaze);
 
 private:
     Ui::MainWindow *ui;
+
+    int resolution =8;
+    int wallsize = 4;
+    int rslmwll = resolution - wallsize;
 };
 #endif // MAINWINDOW_H

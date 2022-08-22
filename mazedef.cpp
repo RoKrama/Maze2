@@ -1,8 +1,11 @@
 #include "maze.h"
 
+
 Maze::Maze(int xsize, int ysize) :
     x(xsize), y(ysize),
-	Path(0, 0),
+    Path(0, 0),
+    searchPositionLog(&searchPath),
+    findPathcalled(false),
     cell(new cellPtr[x])
 {
 	for (int i = 0; i < x; i++)
@@ -41,7 +44,7 @@ void Maze::generate(int xpos, int ypos)
 						cell[xpos][ypos].visit = true;
 						Path.insert(xpos, ypos);
 
-						break;
+                        break;
 					}
 					tried++;
 					continue;
@@ -56,7 +59,7 @@ void Maze::generate(int xpos, int ypos)
 						cell[xpos][ypos].setfrom(D);
 						Path.insert(xpos, ypos);
 
-						break;
+                        break;
 					}
 					tried++;
 					continue;
@@ -71,7 +74,7 @@ void Maze::generate(int xpos, int ypos)
 						cell[xpos][ypos].setfrom(R);
 						Path.insert(xpos, ypos);
 
-						break;
+                        break;
 					}
 					tried++;
 					continue;
@@ -86,7 +89,7 @@ void Maze::generate(int xpos, int ypos)
 						cell[xpos][ypos].visit = true;
 						Path.insert(xpos, ypos);
 
-						break;
+                        break;
 					}
 					tried++;
 					continue;
@@ -104,6 +107,7 @@ void Maze::findPath(int startx, int starty)
 {
     int tried;
     searchPath = Memo(startx, starty);
+    searchPath.insert(startx, starty);
     cell[startx][starty].searchVisit = true;
 
     random_device rng;
@@ -113,9 +117,9 @@ void Maze::findPath(int startx, int starty)
 
     do {
         tried = 0;
-        while (tried != 4)
+        while (tried < 4)
         {
-            if (startx == 0 && starty == 0)
+            if (startx == x-1 && starty == y-1)
                 return;
 
             shuffle(&cases[0], &cases[4], rngnr);
@@ -123,6 +127,9 @@ void Maze::findPath(int startx, int starty)
 
             for (int i = 0; i < 4; i++)
             {
+                if (startx == x-1 && starty == y-1)
+                    return;
+
                 if (cases[i] == 0)
                 {
                     if (starty < (y - 1) && cell[startx][starty + 1].searchVisit == false)
@@ -190,8 +197,18 @@ void Maze::findPath(int startx, int starty)
         starty = searchPath.prev->position[1];
     }
     while (searchPath.prev->prev != nullptr);
+    return;
 }
-void Maze::printMaze()
+Memo* Maze::getPositionLog(int fromx, int fromy)
+{
+    if(findPathcalled == false)
+    {
+        findPath(fromx, fromy);
+        findPathcalled = true;
+    }
+    return (searchPositionLog);
+}
+void Maze::printMaze() const
 {
 	cout << ' ';
     for (int k = 0; k < y; k++)
@@ -202,7 +219,8 @@ void Maze::printMaze()
 	{
         for (int j = 0; j < y; j++)
             //cell[i][j].printcell();
-            cout<<"i:"<<i<<" j:"<<j;
+            //cout<<"i:"<<i<<" j:"<<j;
+            cell[searchPath.position[0]][searchPath.position[1]].printcell();
 		cout << endl << '|';
 	}
 	cout << "\b ";
@@ -259,4 +277,13 @@ Memo* Memo::move()
 {
 	prev = prev->prev;
 	return (prev);
+}
+Memo* Memo::iteratePrev(int times)
+{
+    if(prev != nullptr && times > 0)
+    {
+        times--;
+        return(prev->iteratePrev(times));
+    }
+    return(prev);
 }
