@@ -11,7 +11,7 @@ Maze::Maze(int xsize, int ysize) :
 	for (int i = 0; i < x; i++)
         cell[i] = new Cell[y];
 
-	generate(0, y - 1);
+    generate((x-1), (y-1));
 }
 void Maze::generate(int xpos, int ypos)
 {
@@ -41,6 +41,7 @@ void Maze::generate(int xpos, int ypos)
 
 						cell[xpos][ypos].setto(L);
 						ypos = ypos + 1;
+
 						cell[xpos][ypos].visit = true;
 						Path.insert(xpos, ypos);
 
@@ -95,7 +96,7 @@ void Maze::generate(int xpos, int ypos)
 					continue;
 				}
 			}
-		}
+        }
 		Path.move();
 		xpos = Path.prev->position[0];
 		ypos = Path.prev->position[1];
@@ -108,7 +109,6 @@ void Maze::findPath(int startx, int starty)
     int tried;
     searchPath = Memo(startx, starty);
     searchPath.insert(startx, starty);
-    cell[startx][starty].searchVisit = true;
 
     random_device rng;
     mt19937 rngnr(rng());
@@ -119,17 +119,11 @@ void Maze::findPath(int startx, int starty)
         tried = 0;
         while (tried < 4)
         {
-            if (startx == x-1 && starty == y-1)
-                return;
-
             shuffle(&cases[0], &cases[4], rngnr);
             tried = 0;
 
             for (int i = 0; i < 4; i++)
             {
-                if (startx == x-1 && starty == y-1)
-                    return;
-
                 if (cases[i] == 0)
                 {
                     if (starty < (y - 1) && cell[startx][starty + 1].searchVisit == false)
@@ -191,6 +185,8 @@ void Maze::findPath(int startx, int starty)
                     continue;
                 }
             }
+            if (startx == x-1 && starty == y-1)
+                return;
         }
         searchPath.move();
         startx = searchPath.prev->position[0];
@@ -206,7 +202,10 @@ Memo* Maze::getPositionLog(int fromx, int fromy)
         findPath(fromx, fromy);
         findPathcalled = true;
     }
-    return (searchPositionLog);
+    return (searchPositionLog->iteratePrev(0));
+}
+Memo* Maze::getPositionLog(Memo* Iterator){
+    return(Iterator->iteratePrev(0));
 }
 void Maze::printMaze() const
 {

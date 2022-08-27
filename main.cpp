@@ -6,19 +6,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-    int hight = 150;
-    int width = 200;
+    int hight = 353;
+    int width = 639;
 
-w.showMaximized();
-w.repaint();
+    w.showMaximized();
     Maze labirint(hight, width);
     w.setmazegraph(labirint);
-
- //   w.repaint();
- //   w.qprintcell(labirint);
-
-    //labirint.findPath(50, 50);
-
-   // labirint.printMaze();
     return a.exec();
 }

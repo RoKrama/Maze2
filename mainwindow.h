@@ -24,14 +24,16 @@ public:
     QImage image;
 
     void setmazegraph(Maze &mymaze);
-    void setpixcell(Maze &mymaze, int &x, int &y);
+    void setpixcell(Maze &mymaze, int &x, int &y, QRgb colrin, QRgb colorwall);
     void qprintcell(Maze &mymaze);
 
 private:
     Ui::MainWindow *ui;
 
-    int resolution =8;
-    int wallsize = 4;
+    int resolution =4;
+    int wallsize = 1;
     int rslmwll = resolution - wallsize;
+
+    int* iteratePrev(Memo** iterator);
 };
 #endif // MAINWINDOW_H

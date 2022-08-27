@@ -6,7 +6,6 @@
 #include <cstdlib>
 #include <algorithm>
 
-
 using namespace std;
 
 class Memo
@@ -24,8 +23,8 @@ class Memo
 	void insert(int xcr, int ycr);
 
 public:
-    Memo* iteratePrev(int times);
     int* getPosition() {return (&position[0]);};
+    Memo* iteratePrev(int times);
 };
 
 enum direction { null, U, D, L, R };
@@ -74,5 +73,6 @@ public:
     const int gety() const {return (y);};
 
     Memo* getPositionLog(int fromx, int formy);
+    Memo* getPositionLog(Memo* Iterator);
 };
 #endif // MAZE_H
