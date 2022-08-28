@@ -5,8 +5,12 @@
 #include <random>
 #include <cstdlib>
 #include <algorithm>
+#include <windows.h>
+#include <qtmetamacros.h>
+#include <QMetaObject>
+#include <QString>
+#include "qobject.h"
 
-using namespace std;
 
 class Memo
 {
@@ -47,8 +51,10 @@ public:
     const bool getWalldown() const {return walldown;};
 };
 
-class Maze
+class Maze : public QObject
 {
+    Q_OBJECT
+
 	int x, y;
 
 	typedef Cell* cellPtr;
@@ -59,8 +65,13 @@ class Maze
     Memo* searchPositionLog;
 
     void generate(int xp, int yp);
-    void findPath(int startx, int starty);
+
     bool findPathcalled;
+
+    signals:
+        void sendsignal(Maze* mymaze, bool forward);
+
+
 
 public:
 
@@ -71,8 +82,10 @@ public:
     const cellPtr* getcells() const {return(cell);}
     const int getx() const {return (x);};
     const int gety() const {return (y);};
+    void findPath(int startx, int starty);
 
     Memo* getPositionLog(int fromx, int formy);
     Memo* getPositionLog(Memo* Iterator);
 };
+Q_DECLARE_METATYPE(Maze)
 #endif // MAZE_H

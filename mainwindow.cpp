@@ -30,49 +30,81 @@ void MainWindow::setmazegraph(Maze &mymaze)
 
         for(int i = 0; i<x; i++)
             for(int j = 0; j<y; j++)
-                setpixcell(mymaze, i, j, QColor("white").rgb(), QColor("white").rgb());
-
-    qprintcell(mymaze);
+                setimgcell(&mymaze, i, j, QColor("white").rgb(), QColor("white").rgb());
 
     mazegraph->setGeometry(resolution, resolution, (x*resolution+wallsize), (y*resolution+wallsize));
-    mazegraph->setPixmap(QPixmap::fromImage(image));
+
+//(QPixmap::fromImage(image))
+
+
+
 
 }
-void MainWindow::setpixcell(Maze &mymaze, int &x, int &y, QRgb colrin, QRgb colrwall)
+void MainWindow::setimgcell(Maze *mymaze, int &x, int &y, QRgb colrin, QRgb colrwall)
 {
     for (int i = 0; i<rslmwll; i++)
         for (int j = 0; j<rslmwll; j++)
             image.setPixel(x*resolution+i+wallsize,
                            y*resolution+j+wallsize, QColor(colrwall).rgb());
 
-    if(mymaze.getcells()[y][x].getWallleft() == false)
+    if(mymaze->getcells()[y][x].getWallleft() == false)
         for (int i = rslmwll; i<resolution; i++)
             for (int j = 0; j<rslmwll; j++)
                 image.setPixel(x*resolution+i+wallsize,
                                y*resolution+j+wallsize, QColor(colrin).rgb());
 
-    if(mymaze.getcells()[y][x].getWalldown() == false)
+    if(mymaze->getcells()[y][x].getWalldown() == false)
         for (int i = 0; i<rslmwll; i++)
             for (int j = rslmwll; j<resolution; j++)
                 image.setPixel(x*resolution+i+wallsize,
                                y*resolution+j+wallsize, QColor(colrin).rgb());
 
+
     return;
 }
 
-void MainWindow::qprintcell(Maze &mymaze)
+void MainWindow::setimgpath(Maze *mymaze)
 {
-    Memo* Iterator = mymaze.getPositionLog(0,0);
+    Iterator = mymaze->getPositionLog(0,0);
 
     while(true)
     {
-         setpixcell(mymaze, Iterator->getPosition()[1], Iterator->getPosition()[0],
-                 QColor("pink").rgb(), QColor("pink").rgb()) ;
+        setimgcell(mymaze, Iterator->getPosition()[1], Iterator->getPosition()[0],
+             QColor("pink").rgb(), QColor("pink").rgb()) ;
 
-            if(!(Iterator->getPosition()[1] == 0 &&
-                 Iterator->getPosition()[0] == 0))
-                Iterator = mymaze.getPositionLog(Iterator);
-
-            else return;
+        if(!(Iterator->getPosition()[1] == 0 &&
+             Iterator->getPosition()[0] == 0) )
+                Iterator = mymaze->getPositionLog(Iterator);
+        else return;
+        mazegraph->setPixmap(QPixmap::fromImage(image));
+        Sleep(30);
+        mazegraph->update();
     }
 }
+
+void MainWindow::setimgpath_slot(Maze *mymaze, bool forward)
+{
+    Sleep(30);
+    if (forward == true)
+    {
+    Iterator = mymaze->getPositionLog(0,0);
+    setimgcell(mymaze, Iterator->getPosition()[1], Iterator->getPosition()[0],
+         QColor("red").rgb(), QColor("red").rgb()) ;
+    }
+    if (forward == false)
+    {
+        Iterator = mymaze->getPositionLog(0,0);
+        setimgcell(mymaze, Iterator->getPosition()[1], Iterator->getPosition()[0],
+             QColor("pink").rgb(), QColor("pink").rgb()) ;
+    }
+    mazegraph->setPixmap(QPixmap::fromImage(image));
+//Paint = new QPainter(&imagepixmap);
+//    Paint->setPen(QColor("red").rgb());
+
+//    Paint->drawRect(myrect);
+//    mazegraph->setPixmap(imagepixmap);
+//    mazegraph->update;
+//              Paint->end();
+
+//delete Paint;
+    }

@@ -20,8 +20,8 @@ void Maze::generate(int xpos, int ypos)
 	cell[xpos][ypos].visit = true;
 	cell[x - 1][y - 1].setfrom(R);
 
-    random_device rng;
-    mt19937 rngnr(rng());
+    std::random_device rng;
+    std::mt19937 rngnr(rng());
 
 	int cases[4] = { 0,1,2,3 };
 
@@ -29,7 +29,7 @@ void Maze::generate(int xpos, int ypos)
 		tried = 0;
 		while (tried != 4)
 		{
-            shuffle(&cases[0], &cases[4], rngnr);
+        std::shuffle(&cases[0], &cases[4], rngnr);
 			tried = 0;
 
 			for (int i = 0; i < 4; i++)
@@ -110,8 +110,8 @@ void Maze::findPath(int startx, int starty)
     searchPath = Memo(startx, starty);
     searchPath.insert(startx, starty);
 
-    random_device rng;
-    mt19937 rngnr(rng());
+    std::random_device rng;
+    std::mt19937 rngnr(rng());
 
     int cases[4] = { 0,1,2,3 };
 
@@ -119,7 +119,7 @@ void Maze::findPath(int startx, int starty)
         tried = 0;
         while (tried < 4)
         {
-            shuffle(&cases[0], &cases[4], rngnr);
+        std::shuffle(&cases[0], &cases[4], rngnr);
             tried = 0;
 
             for (int i = 0; i < 4; i++)
@@ -185,9 +185,12 @@ void Maze::findPath(int startx, int starty)
                     continue;
                 }
             }
+          //  Sleep(1090);
             if (startx == x-1 && starty == y-1)
                 return;
+           // emit sendsignal(this, true);
         }
+     //   emit sendsignal(this, false);
         searchPath.move();
         startx = searchPath.prev->position[0];
         starty = searchPath.prev->position[1];
@@ -197,11 +200,11 @@ void Maze::findPath(int startx, int starty)
 }
 Memo* Maze::getPositionLog(int fromx, int fromy)
 {
-    if(findPathcalled == false)
+/*    if(findPathcalled == false)
     {
         findPath(fromx, fromy);
         findPathcalled = true;
-    }
+    } */
     return (searchPositionLog->iteratePrev(0));
 }
 Memo* Maze::getPositionLog(Memo* Iterator){
@@ -209,20 +212,20 @@ Memo* Maze::getPositionLog(Memo* Iterator){
 }
 void Maze::printMaze() const
 {
-	cout << ' ';
+    std::cout << ' ';
     for (int k = 0; k < y; k++)
-		cout << "_ ";
-	cout << endl << ' ';
+        std::cout << "_ ";
+    std::cout << std::endl << ' ';
 
     for (int i = 0; i < x; i++)
 	{
         for (int j = 0; j < y; j++)
             //cell[i][j].printcell();
-            //cout<<"i:"<<i<<" j:"<<j;
+            //std::cout<<"i:"<<i<<" j:"<<j;
             cell[searchPath.position[0]][searchPath.position[1]].printcell();
-		cout << endl << '|';
+        std::cout << std::endl << '|';
 	}
-	cout << "\b ";
+    std::cout << "\b ";
 }
 Maze::~Maze()
 {
@@ -246,11 +249,11 @@ void Cell::setto(direction t)
 }
 void Cell::printcell()
 {
-	if (walldown == true) cout << '_';
-	else cout << ' ';
+    if (walldown == true) std::cout << '_';
+    else std::cout << ' ';
 
-	if (wallleft == true) cout << '|';
-	else cout << ' ';
+    if (wallleft == true) std::cout << '|';
+    else std::cout << ' ';
 }
 
 Memo::Memo() :
