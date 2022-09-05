@@ -1,110 +1,110 @@
-#include "maze.h"
+#include "engine.h"
 
 
-Maze::Maze(int xsize, int ysize) :
+Engine::Engine(int xsize, int ysize) :
     x(xsize), y(ysize),
     Path(0, 0),
     searchPositionLog(&searchPath),
     findPathcalled(false),
     cell(new cellPtr[x])
 {
-	for (int i = 0; i < x; i++)
+    for (int i = 0; i < x; i++)
         cell[i] = new Cell[y];
 
-    generate((x-1), (y-1));
+    generate((x/2), (y/2));
 }
-void Maze::generate(int xpos, int ypos)
+void Engine::generate(int xpos, int ypos)
 {
-	int tried;
-	Path = Memo(xpos, ypos);
-	cell[xpos][ypos].visit = true;
-	cell[x - 1][y - 1].setfrom(R);
+    int tried;
+    Path = Memo(xpos, ypos);
+    cell[xpos][ypos].visit = true;
+    cell[x - 1][y - 1].setfrom(R);
 
     std::random_device rng;
     std::mt19937 rngnr(rng());
 
-	int cases[4] = { 0,1,2,3 };
+    int cases[4] = { 0,1,2,3 };
 
-	do {
-		tried = 0;
-		while (tried != 4)
-		{
+    do {
+        tried = 0;
+        while (tried != 4)
+        {
         std::shuffle(&cases[0], &cases[4], rngnr);
-			tried = 0;
+            tried = 0;
 
-			for (int i = 0; i < 4; i++)
-			{
-				if (cases[i] == 0)
-				{
-					if (ypos < (y - 1) && cell[xpos][ypos + 1].visit == false)
-					{
+            for (int i = 0; i < 4; i++)
+            {
+                if (cases[i] == 0)
+                {
+                    if (ypos < (y - 1) && cell[xpos][ypos + 1].visit == false)
+                    {
 
-						cell[xpos][ypos].setto(L);
-						ypos = ypos + 1;
+                        cell[xpos][ypos].setto(L);
+                        ypos = ypos + 1;
 
-						cell[xpos][ypos].visit = true;
-						Path.insert(xpos, ypos);
-
-                        break;
-					}
-					tried++;
-					continue;
-				}
-				if (cases[i] == 1)
-				{
-					if (xpos > 0 && cell[xpos - 1][ypos].visit == false)
-					{
-						xpos = xpos - 1;
-
-						cell[xpos][ypos].visit = true;
-						cell[xpos][ypos].setfrom(D);
-						Path.insert(xpos, ypos);
+                        cell[xpos][ypos].visit = true;
+                        Path.insert(xpos, ypos);
 
                         break;
-					}
-					tried++;
-					continue;
-				}
-				if (cases[i] == 2)
-				{
-					if (ypos > 0 && cell[xpos][ypos - 1].visit == false)
-					{
-						ypos = ypos - 1;
+                    }
+                    tried++;
+                    continue;
+                }
+                if (cases[i] == 1)
+                {
+                    if (xpos > 0 && cell[xpos - 1][ypos].visit == false)
+                    {
+                        xpos = xpos - 1;
 
-						cell[xpos][ypos].visit = true;
-						cell[xpos][ypos].setfrom(R);
-						Path.insert(xpos, ypos);
-
-                        break;
-					}
-					tried++;
-					continue;
-				}
-				if (cases[i] == 3)
-				{
-					if (xpos < (x - 1) && cell[xpos + 1][ypos].visit == false)
-					{
-						cell[xpos][ypos].setto(U);
-						xpos = xpos + 1;
-
-						cell[xpos][ypos].visit = true;
-						Path.insert(xpos, ypos);
+                        cell[xpos][ypos].visit = true;
+                        cell[xpos][ypos].setfrom(D);
+                        Path.insert(xpos, ypos);
 
                         break;
-					}
-					tried++;
-					continue;
-				}
-			}
+                    }
+                    tried++;
+                    continue;
+                }
+                if (cases[i] == 2)
+                {
+                    if (ypos > 0 && cell[xpos][ypos - 1].visit == false)
+                    {
+                        ypos = ypos - 1;
+
+                        cell[xpos][ypos].visit = true;
+                        cell[xpos][ypos].setfrom(R);
+                        Path.insert(xpos, ypos);
+
+                        break;
+                    }
+                    tried++;
+                    continue;
+                }
+                if (cases[i] == 3)
+                {
+                    if (xpos < (x - 1) && cell[xpos + 1][ypos].visit == false)
+                    {
+                        cell[xpos][ypos].setto(U);
+                        xpos = xpos + 1;
+
+                        cell[xpos][ypos].visit = true;
+                        Path.insert(xpos, ypos);
+
+                        break;
+                    }
+                    tried++;
+                    continue;
+                }
+            }
         }
-		Path.move();
-		xpos = Path.prev->position[0];
-		ypos = Path.prev->position[1];
-	}
-	while (Path.prev->prev != nullptr);
+        Path.move();
+        xpos = Path.prev->position[0];
+        ypos = Path.prev->position[1];
+    }
+    while (Path.prev->prev != nullptr);
 
 }
-void Maze::findPath(int startx, int starty)
+void Engine::findPath(int startx, int starty)
 {
     int tried;
     searchPath = Memo(startx, starty);
@@ -136,8 +136,7 @@ void Maze::findPath(int startx, int starty)
                             break;
                         }
                     }
-                    tried++;
-                    continue;
+                    tried++; continue;
                 }
                 if (cases[i] == 1)
                 {
@@ -151,8 +150,7 @@ void Maze::findPath(int startx, int starty)
                         break;
                         }
                     }
-                    tried++;
-                    continue;
+                    tried++; continue;
                 }
                 if (cases[i] == 2)
                 {
@@ -166,8 +164,7 @@ void Maze::findPath(int startx, int starty)
                         break;
                         }
                     }
-                    tried++;
-                    continue;
+                    tried++; continue;
                 }
                 if (cases[i] == 3)
                 {
@@ -181,16 +178,13 @@ void Maze::findPath(int startx, int starty)
                         break;
                         }
                     }
-                    tried++;
-                    continue;
+                    tried++; continue;
                 }
             }
-          //  Sleep(1090);
-            if (startx == x-1 && starty == y-1)
-                return;
-          //  emit sendsignal(this, true);
+            emit sendsignal(startx, starty, true);
+            if (startx == x-1 && starty == y-1) return;
         }
-     //   emit sendsignal(this, false);
+        emit sendsignal(startx, starty, false);
         searchPath.move();
         startx = searchPath.prev->position[0];
         starty = searchPath.prev->position[1];
@@ -198,7 +192,7 @@ void Maze::findPath(int startx, int starty)
     while (searchPath.prev->prev != nullptr);
     return;
 }
-Memo* Maze::getPositionLog(int fromx, int fromy)
+Memo* Engine::getPositionLog(int fromx, int fromy)
 {
 /*    if(findPathcalled == false)
     {
@@ -207,10 +201,10 @@ Memo* Maze::getPositionLog(int fromx, int fromy)
     } */
     return (searchPositionLog->iteratePrev(0));
 }
-Memo* Maze::getPositionLog(Memo* Iterator){
+Memo* Engine::getPositionLog(Memo* Iterator){
     return(Iterator->iteratePrev(0));
 }
-void Maze::printMaze() const
+void Engine::printEngine() const
 {
     std::cout << ' ';
     for (int k = 0; k < y; k++)
@@ -218,34 +212,34 @@ void Maze::printMaze() const
     std::cout << std::endl << ' ';
 
     for (int i = 0; i < x; i++)
-	{
+    {
         for (int j = 0; j < y; j++)
-            //cell[i][j].printcell();
+            cell[i][j].printcell();
             //std::cout<<"i:"<<i<<" j:"<<j;
-            cell[searchPath.position[0]][searchPath.position[1]].printcell();
+           // cell[searchPath.position[0]][searchPath.position[1]].printcell();
         std::cout << std::endl << '|';
-	}
+    }
     std::cout << "\b ";
 }
-Maze::~Maze()
+Engine::~Engine()
 {
-	for (int j = 0; j < x; j++)
-		delete[] cell[j];
-	delete[] cell;
+    for (int j = 0; j < x; j++)
+        delete[] cell[j];
+    delete[] cell;
 }
 
 Cell::Cell() :
-	wallleft(true), walldown(true),
+    wallleft(true), walldown(true),
     visit(false), searchVisit(false) {}
 void Cell::setfrom(direction frm)
 {
-	if (frm == D) walldown = false;
-	if (frm == R) wallleft = false;
+    if (frm == D) walldown = false;
+    if (frm == R) wallleft = false;
 }
 void Cell::setto(direction t)
 {
-	if (t == U) walldown = false;
-	if (t == L) wallleft = false;
+    if (t == U) walldown = false;
+    if (t == L) wallleft = false;
 }
 void Cell::printcell()
 {
@@ -257,28 +251,28 @@ void Cell::printcell()
 }
 
 Memo::Memo() :
-	prev(nullptr), create(nullptr)
+    prev(nullptr), create(nullptr)
 {
-	position[0] = 0;
-	position[1] = 0;
+    position[0] = 0;
+    position[1] = 0;
 }
 Memo::Memo(int xcr, int ycr) :
-	prev(nullptr), create(nullptr)
+    prev(nullptr), create(nullptr)
 {
-	position[0] = xcr;
-	position[1] = ycr;
+    position[0] = xcr;
+    position[1] = ycr;
 }
 void Memo::insert(int xcr, int ycr)
 {
-	create = new Memo(xcr, ycr);
-	create->prev = prev;
-	prev = create;
-	return;
+    create = new Memo(xcr, ycr);
+    create->prev = prev;
+    prev = create;
+    return;
 }
 Memo* Memo::move()
 {
-	prev = prev->prev;
-	return (prev);
+    prev = prev->prev;
+    return (prev);
 }
 Memo* Memo::iteratePrev(int times)
 {

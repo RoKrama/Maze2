@@ -10,42 +10,40 @@
 #include <QImage>
 #include <QPixmap>
 #include <QPainter>
+#include <QPaintEvent>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
-
-class MainWindow : public QMainWindow
+class Labirint : public QWidget
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    Labirint (QWidget *parent = nullptr);
+    ~Labirint();
 
-    QLabel *mazegraph = new QLabel(this);
-    QImage image;
-    Memo* Iterator;
 
-    void setmazegraph(Maze &mymaze);
-    void setimgcell(Maze *mymaze, int &x, int &y, QRgb colrin, QRgb colorwall);
+
+
     void setimgpath(Maze *mymaze);
-    QPixmap imagepixmap = QPixmap(1000, 1000);
-    QRectF myrect = QRectF(59,59,50,50);
-        QPainter* Paint;
 
 
-    public slots:
-        void setimgpath_slot(Maze *mymaze, bool forward);
+    virtual void paintEvent(QPaintEvent *event) override;
+
+//    public slots:
+//void setimgpath_slot(Maze *mymaze, bool forward);
 
 private:
-    Ui::MainWindow *ui;
-
-    int resolution =4;
-    int wallsize = 1;
+    int resolution = 2;
+    int wallsize   = 1;
     int rslmwll = resolution - wallsize;
 
-    int* iteratePrev(Memo** iterator);
+    Memo*  Iterator;
+    QRectF leftwall_rect;
+    QRectF downwall_rect;
+    QRectF cellbody_rect;
 
+    void color_empty_maze(Maze &mymaze);
+    void color_cells(Maze *mymaze, int &x, int &y, QRgb colrin, QRgb colorwall);
+
+    QPainter* Paint;
 };
 #endif // MAINWINDOW_H
