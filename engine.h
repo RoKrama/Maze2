@@ -5,11 +5,9 @@
 #include <random>
 #include <cstdlib>
 #include <algorithm>
-#include <qtmetamacros.h>
-#include <QMetaObject>
 #include <QString>
-#include "qobject.h"
 #include <QThread>
+#include <QCoreApplication>
 
 class Memo
 {

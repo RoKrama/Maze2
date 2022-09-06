@@ -8,7 +8,7 @@
 
 class Cell_graphics;
 
-class Labirint : public QWidget
+class Labirint: public QWidget
 {
     Q_OBJECT
 
@@ -54,7 +54,7 @@ class Cell_graphics
     Cell_graphics(QRectF* bodyPtrVal,
                   QRectF* leftPtrVal,
                   QRectF* downPtrVal);
-  //  ~Cell_graphics();
+//    ~Cell_graphics();
 
     QRectF* bodyPtr;
     QRectF* leftPtr;

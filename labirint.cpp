@@ -3,7 +3,7 @@
 Labirint::Labirint(QWidget *parent) :
     QWidget(parent),
 
-    bodysize(2), wallsize(1),
+    bodysize(10), wallsize(5),
     wholesize(bodysize+wallsize),
     x(0), y(0),
 
@@ -17,7 +17,7 @@ Labirint::Labirint(QWidget *parent) :
     cell_graphics_arrayPtr(nullptr)
 {
     setWindowTitle("Labirint");
-    setGeometry(0,0,1500, 1500);
+    setBaseSize(100,100);
 }
 Labirint::~Labirint()
 {
@@ -69,13 +69,14 @@ void Labirint::color_path(const int &signal_x, const int &signal_y, bool forward
         cell_graphics_arrayPtr[signal_y][signal_x].visiting = false;
         cell_graphics_arrayPtr[signal_y][signal_x].visited = true;
     }
-    call_updater();
+    QCoreApplication::processEvents();
+    //thread()->msleep(4);
+    this->update(signal_y*wholesize, signal_x*wholesize, wholesize, wholesize);
 }
 void Labirint::paintEvent(QPaintEvent* event)
 {
 
-    QPainter Painter;
-    Painter.begin(this);
+    QPainter Painter(this);
 
     for(int i=0; i < x; i++) for(int j=0; j < y; j++)
     {
@@ -123,7 +124,6 @@ void Labirint::paintEvent(QPaintEvent* event)
                 Painter.fillRect(*cell_graphics_arrayPtr[i][j].leftPtr, Colorof_wall);
         }
     }
-    Painter.end();
 }
 
 Cell_graphics::Cell_graphics(){}
@@ -138,7 +138,7 @@ Cell_graphics::Cell_graphics(QRectF* bodyPtrVal,
 {}
 //Cell_graphics::~Cell_graphics()
 //{
-//    delete bodyPtr;
-//    delete leftPtr;
-//    delete downPtr;
+////    delete bodyPtr;
+////    delete leftPtr;
+////    delete downPtr;
 //}
